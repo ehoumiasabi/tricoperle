@@ -1,4 +1,7 @@
 <?php 
+// Active le tampon de sortie pour autoriser header() après les includes
+ob_start();
+
 include 'includes/header.php'; 
 $store_data = get_store_data();
 
@@ -16,10 +19,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_cart'])) {
                     $_SESSION['cart'][$id]['qty']++;
                 } else {
                     $_SESSION['cart'][$id] = [
-                        'id' => $item['id'],
+                        'id'    => $item['id'],
                         'title' => $item['title'],
                         'price' => $item['price'],
-                        'qty' => 1
+                        'qty'   => 1
                     ];
                 }
                 break;
@@ -546,4 +549,8 @@ function closeDetailsModal(event) {
 }
 </script>
 
-<?php include 'includes/footer.php'; ?>
+<?php 
+include 'includes/footer.php'; 
+// Envoie le contenu conservé en mémoire au navigateur
+ob_end_flush(); 
+?>
