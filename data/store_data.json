@@ -1,0 +1,58 @@
+{
+    "creations": [
+        {
+            "id": 1,
+            "title": "Collection de Bérets Tricotés à la Main",
+            "price": 5000,
+            "description": "Cette collection présente trois magnifiques bérets tricotés à la main, chacun doté d'une texture unique et de détails artisanaux. Du rouge vibrant porté par la jeune femme à l'élégant vert olive sur le mannequin, ces bérets offrent une allure sophistiquée. Le béret gris clair pour enfant, orné de jolis nœuds, ajoute une touche de douceur et de charme.",
+            "image": "assets\/images\/img1.jpeg",
+            "image2": "assets\/images\/img.jpeg",
+            "image3": "assets\/images\/img2.jpeg"
+        },
+        {
+            "id": 2,
+            "title": "Collection de Parures Traditionnelles et Élégantes en Perles",
+            "price": 20000,
+            "description": "Cette collection met en valeur de magnifiques parures composées de colliers multifils et de bijoux assortis, confectionnés avec un travail artisanal minutieux. Elle associe la richesse culturelle des perles de corail aux nuances dorées et l'élégance intemporelle des perles noires agrémentées de détails brillants. Parfaits pour rehausser une tenue lors de grandes occasions ou de cérémonies, ces bijoux incarnent le prestige, le raffinement et le charme traditionnel.",
+            "image": "assets\/images\/col3.jpg",
+            "image2": "assets\/images\/collier1.jpg",
+            "image3": "assets\/images\/collier3.jpg"
+        },
+        {
+            "id": 3,
+            "title": "Collection de Maillots de Bain Deux Pièces au Style Crochet Bohème",
+            "price": 15000,
+            "description": "Cette collection présente de sublimes maillots de bain deux pièces caractérisés par des finitions en bordures crochetées au charme bohème et artisanal. Les modèles se déclinent en une variété de teintes, allant du vert tropical rehaussé de bordures multicolores vibrantes, au rose pétillant, jusqu'au beige neutre et épuré. Conçus pour allier confort et élégance, ces maillots apportent une touche originale, tendance et ensoleillée à votre garde-robe estivale.",
+            "image": "assets\/images\/img (3).jpeg",
+            "image2": "assets\/images\/img (4).jpeg",
+            "image3": "assets\/images\/img (2).jpeg"
+        }
+    ],
+    "videos": [
+        {
+            "id": 1,
+            "title": "Démonstration de Confection",
+            "url": "assets\/videos\/vide3.mp4"
+        },
+        {
+            "id": 2,
+            "title": "Démonstration de Confection",
+            "url": "assets\/videos\/vide4 (2).mp4"
+        },
+        {
+            "id": 3,
+            "title": "Démonstration de Confection",
+            "url": "assets\/videos\/vide4 (1).mp4"
+        }
+    ],
+    "messages": [
+        {
+            "id": 1792427520,
+            "date": "19\/10\/2026 16:32",
+            "nom": "Asabi EHOUMI",
+            "email": "ehoumiasabi@gmail.com",
+            "telephone": "0197562718",
+            "message": "Je veux un bonnet "
+        }
+    ]
+}
