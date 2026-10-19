@@ -12,8 +12,8 @@ if (isset($_GET['action']) && $_GET['action'] === 'remove' && isset($_GET['id'])
 $cart = $_SESSION['cart'] ?? [];
 $total = 0;
 
-// Remplacez '22900000000' par votre VRAI numéro WhatsApp (Exemple pour le Bénin: 229XXXXXXXX)
-$mon_numero_whatsapp = "229 93 92 07 05"; 
+// Numéro sans espaces pour assurer le bon fonctionnement du lien wa.me sur Android
+$mon_numero_whatsapp = "22993920705"; 
 ?>
 
 <section class="section-container">
@@ -64,5 +64,63 @@ $mon_numero_whatsapp = "229 93 92 07 05";
         </div>
     <?php endif; ?>
 </section>
+
+<!-- RÈGLES CSS POUR EMPÊCHER TOUT CONTENU COUPÉ SUR ANDROID/MOBILE -->
+<style>
+/* Empêche le débordement horizontal sur l'ensemble de la page */
+html, body {
+    width: 100%;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+.section-container {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem 3rem 1rem;
+    box-sizing: border-box;
+}
+
+/* Permet au tableau de défiler horizontalement sur Android si l'écran est petit */
+.cart-table-container {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 1rem;
+}
+
+.cart-table {
+    width: 100%;
+    min-width: 500px; /* Conserve une largeur minimale pour ne pas écraser les colonnes */
+    border-collapse: collapse;
+}
+
+.cart-table th, .cart-table td {
+    padding: 10px 12px;
+    white-space: nowrap; /* Empêche le texte de se couper brutalement */
+}
+
+/* Adaptation mobile du bloc résumé et du bouton WhatsApp */
+@media (max-width: 576px) {
+    .cart-summary {
+        text-align: center !important;
+    }
+    
+    .cart-summary h3 {
+        font-size: 1.2rem !important;
+    }
+
+    .btn-gold {
+        display: block !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        text-align: center !important;
+        padding: 0.9rem 1rem !important;
+        white-space: normal !important;
+    }
+}
+</style>
 
 <?php include 'includes/footer.php'; ?>
