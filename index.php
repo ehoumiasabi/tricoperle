@@ -7,9 +7,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_cart'])) {
     $id = intval($_POST['item_id']);
     
     if (isset($store_data['creations']) && is_array($store_data['creations'])) {
-        foreach ($store_data['creations'] as$item) {
-            if ($item['id'] ===$id) {
-                if (!isset($_SESSION['cart'])) {$_SESSION['cart'] = [];
+        foreach ($store_data['creations'] as $item) {
+            if ($item['id'] === $id) {
+                if (!isset($_SESSION['cart'])) {
+                    $_SESSION['cart'] = [];
                 }
                 if (isset($_SESSION['cart'][$id])) {
                     $_SESSION['cart'][$id]['qty']++;
@@ -55,10 +56,10 @@ $hero_bg_image = "assets/images/hero-bg.jpg";
 
     <div class="grid-container">
         <?php if (!empty($store_data['creations'])): ?>
-            <?php foreach ($store_data['creations'] as$item): ?>
+            <?php foreach ($store_data['creations'] as $item): ?>
                 <?php 
                     $short_desc = (mb_strlen($item['description']) > 80) 
-                        ? mb_strimwidth($item['description'], 0, 80, '...') :$item['description'];
+                        ? mb_strimwidth($item['description'], 0, 80, '...') : $item['description'];
                 ?>
                 <div class="card card-creation">
                     <div class="card-img-wrapper">
@@ -74,7 +75,7 @@ $hero_bg_image = "assets/images/hero-bg.jpg";
                         
                         <!-- BOUTONS D'ACTION SUR LES CARTES -->
                         <div class="card-actions">
-                            <button type="button" class="btn-details" onclick="openDetailsModal(<?php echo htmlspecialchars(json_encode($item)); ?>)">
+                            <button type="button" class="btn-details" onclick="openDetailsModal(<?php echo htmlspecialchars(json_encode($item), ENT_QUOTES, 'UTF-8'); ?>)">
                                 🔍 Détails
                             </button>
 
@@ -101,7 +102,7 @@ $hero_bg_image = "assets/images/hero-bg.jpg";
 
     <div class="grid-container">
         <?php if (!empty($store_data['videos'])): ?>
-            <?php foreach ($store_data['videos'] as$video): ?>
+            <?php foreach ($store_data['videos'] as $video): ?>
                 <div class="card card-video">
                     <div class="video-local-container">
                         <video controls poster="assets/images/logo.png">
@@ -122,7 +123,7 @@ $hero_bg_image = "assets/images/hero-bg.jpg";
 
 <!-- FENÊTRE MODALE DÉTAILS -->
 <div id="modalDetails" class="modal-backdrop" onclick="closeDetailsModal(event)">
-    <div class="modal-box">
+    <div class="modal-box" onclick="event.stopPropagation()">
         <span class="modal-close" onclick="closeDetailsModal()">&times;</span>
         <div class="modal-content">
             <div class="modal-main-img-box">
@@ -156,7 +157,7 @@ html, body {
 .hero {
     position: relative;
     width: 100%;
-    min-height: 55vh; /* Rehaussé */
+    min-height: 55vh;
     background-color: #1a1a1a;
     background-size: cover;
     background-position: center;
@@ -165,7 +166,7 @@ html, body {
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 2rem 1rem; /* Marge interne réduite pour remonter le bloc */
+    padding: 2rem 1rem;
     box-sizing: border-box;
 }
 
@@ -360,7 +361,6 @@ html, body {
     margin-bottom: 1rem;
 }
 
-/* Style des boutons des cartes */
 .card-actions {
     display: flex;
     flex-direction: column;
@@ -505,7 +505,9 @@ html, body {
 <!-- SCRIPT JS -->
 <script>
 function openDetailsModal(item) {
+    const modal = document.getElementById('modalDetails');
     const mainImg = document.getElementById('modalMainImage');
+    
     mainImg.src = item.image;
     
     const img1 = item.image;
@@ -524,4 +526,24 @@ function openDetailsModal(item) {
     thumb1.classList.add('active');
 
     document.getElementById('modalTitle').innerText = item.title;
-    document.getElementById('modalPrice').innerText = new Intl.NumberFormat('fr-FR').format(item.price) + ' FC
+    document.getElementById('modalPrice').innerText = new Intl.NumberFormat('fr-FR').format(item.price) + ' FCFA';
+    document.getElementById('modalDescription').innerText = item.description || '';
+
+    modal.style.display = 'flex';
+}
+
+function switchMainImage(thumbElement) {
+    document.getElementById('modalMainImage').src = thumbElement.src;
+    const thumbs = document.querySelectorAll('.thumb-img');
+    thumbs.forEach(t => t.classList.remove('active'));
+    thumbElement.classList.add('active');
+}
+
+function closeDetailsModal(event) {
+    if (!event || event.target.id === 'modalDetails' || event.target.classList.contains('modal-close')) {
+        document.getElementById('modalDetails').style.display = 'none';
+    }
+}
+</script>
+
+<?php include 'includes/footer.php'; ?>
