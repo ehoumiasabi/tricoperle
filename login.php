@@ -25,11 +25,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <form action="login.php" method="POST">
             <div class="form-group">
                 <label>Nom d'utilisateur</label>
-                <input type="text" name="username" required placeholder="admin">
+                <input type="text" name="username" value="" placeholder="Entrez votre nom d'utilisateur" required>
             </div>
             <div class="form-group">
                 <label>Mot de passe</label>
-                <input type="password" name="password" required placeholder="admin123">
+                <input type="password" name="password" value="" placeholder="Entrez votre mot de passe" required>
             </div>
             <button type="submit" class="btn-gold" style="width: 100%; border: none; cursor: pointer;">Se connecter</button>
         </form>
