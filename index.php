@@ -72,6 +72,7 @@ $hero_bg_image = "assets/images/hero-bg.jpg";
     z-index: 2;
     max-width: 800px;
     width: 100%;
+    padding-top: 1.5rem; /* Ajouté pour libérer de l'espace pour le badge */
 }
 
 .hero-badge {
