@@ -72,7 +72,7 @@ $hero_bg_image = "assets/images/hero-bg.jpg";
     z-index: 2;
     max-width: 800px;
     width: 100%;
-    padding-top: 1.5rem; /* Ajouté pour libérer de l'espace pour le badge */
+    padding-top: 1.5rem;
 }
 
 .hero-badge {
@@ -141,11 +141,81 @@ $hero_bg_image = "assets/images/hero-bg.jpg";
     color: #222;
 }
 
+/* Empêcher la coupe des images dans les cartes */
+.card-img-wrapper {
+    width: 100%;
+    height: 250px;
+    background: #f9f9f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.card-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* STYLE DE LA FENÊTRE MODALE (CACHÉE PAR DÉFAUT AVEC !IMPORTANT) */
+.modal-backdrop {
+    display: none !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.modal-box {
+    background: white;
+    width: 100%;
+    max-width: 600px;
+    border-radius: 8px;
+    padding: 2rem;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: #333;
+}
+
+.modal-main-img-box {
+    width: 100%;
+    height: 350px;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.modal-main-img-box img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
 /* 📱 AJUSTEMENT RESPONSIVE SPÉCIFIQUE POUR MOBILE & ANDROID */
 @media (max-width: 768px) {
     .hero {
         padding: 2.5rem 1rem;
-        min-height: auto; /* Laisse le contenu respirer sans couper */
+        min-height: auto;
     }
 
     .hero-badge {
@@ -155,7 +225,7 @@ $hero_bg_image = "assets/images/hero-bg.jpg";
     }
 
     .hero-content h1 {
-        font-size: 1.8rem; /* Titre plus adapté à l'écran mobile */
+        font-size: 1.8rem;
         margin-bottom: 0.8rem;
     }
 
@@ -165,14 +235,14 @@ $hero_bg_image = "assets/images/hero-bg.jpg";
     }
 
     .hero-buttons {
-        flex-direction: column; /* Aligne les 2 boutons l'un sous l'autre sur mobile */
+        flex-direction: column;
         width: 100%;
         gap: 0.8rem;
     }
 
     .btn-hero-primary,
     .btn-hero-secondary {
-        width: 100%; /* Boutons pleine largeur sur mobile */
+        width: 100%;
         box-sizing: border-box;
         text-align: center;
     }
@@ -204,7 +274,6 @@ $hero_bg_image = "assets/images/hero-bg.jpg";
         <?php if (!empty($store_data['creations'])): ?>
             <?php foreach ($store_data['creations'] as $item): ?>
                 <?php 
-                    // Rassemble les différentes images du produit (image principale + 2 images supplémentaires distinctes)
                     $product_images = [];
                     if (!empty($item['images']) && is_array($item['images'])) {
                         $product_images = $item['images'];
@@ -287,7 +356,7 @@ $hero_bg_image = "assets/images/hero-bg.jpg";
                 <img id="modalMainImage" src="" alt="Aperçu produit">
             </div>
 
-            <!-- Galerie dynamique gérant l'image principale + 2 images différentes -->
+            <!-- Galerie dynamique -->
             <div id="modalGallery" class="modal-gallery" style="display: flex; gap: 8px; margin-top: 10px; justify-content: center; flex-wrap: wrap;"></div>
 
             <h2 id="modalTitle" class="modal-product-title" style="margin-top: 1rem; font-size: 1.5rem;"></h2>
@@ -307,7 +376,6 @@ function openDetailsModal(item) {
     const gallery = document.getElementById('modalGallery');
     gallery.innerHTML = '';
 
-    // Récupération des images (prend en charge le tableau d'images ou les champs séparés)
     let images = [];
     if (item.images && Array.isArray(item.images) && item.images.length > 0) {
         images = item.images;
@@ -342,11 +410,12 @@ function openDetailsModal(item) {
         gallery.appendChild(thumb);
     });
 
-    document.getElementById('modalDetails').style.display = 'flex';
+    // Affiche la modale en modifiant le style en 'flex' lors du clic
+    document.getElementById('modalDetails').style.setProperty('display', 'flex', 'important');
 }
 
 function closeDetailsModal(e) {
-    document.getElementById('modalDetails').style.display = 'none';
+    document.getElementById('modalDetails').style.setProperty('display', 'none', 'important');
 }
 </script>
 
