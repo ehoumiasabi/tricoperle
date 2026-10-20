@@ -10,77 +10,68 @@ $data = get_store_data();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
-    // 1. AJOUT D'UN PRODUIT (AVEC 3 IMAGES AU TOTAL)
+    // 1. AJOUT D'UN PRODUIT (AVEC PLUSIEURS IMAGES)
     if (isset($_POST['add_creation'])) {
-        $imagePath1 = "assets/images/logo.png";
-        $imagePath2 = "";
-        $imagePath3 = "";
-
+        $uploadedImages = [];
         $uploadDir = 'assets/images/';
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0777, true);
         }
 
-        // Image principale
-        if (isset($_FILES['image_file']) && $_FILES['image_file']['error'] === UPLOAD_ERR_OK) {
-            $filename1 = time() . '_1_' . basename($_FILES['image_file']['name']);
-            if (move_uploaded_file($_FILES['image_file']['tmp_name'], $uploadDir . $filename1)) {
-                $imagePath1 = $uploadDir . $filename1;
+        // Parcourir les fichiers envoyés dans le champ multiple "images_files[]"
+        if (isset($_FILES['images_files'])) {
+            $fileCount = count($_FILES['images_files']['name']);
+            for ($i = 0; $i < $fileCount; $i++) {
+                if ($_FILES['images_files']['error'][$i] === UPLOAD_ERR_OK) {
+                    $filename = time() . '_' . $i . '_' . basename($_FILES['images_files']['name'][$i]);
+                    if (move_uploaded_file($_FILES['images_files']['tmp_name'][$i], $uploadDir . $filename)) {
+                        $uploadedImages[] = $uploadDir . $filename;
+                    }
+                }
             }
         }
 
-        // Deuxième exemplaire / vue
-        if (isset($_FILES['image_file2']) && $_FILES['image_file2']['error'] === UPLOAD_ERR_OK) {
-            $filename2 = time() . '_2_' . basename($_FILES['image_file2']['name']);
-            if (move_uploaded_file($_FILES['image_file2']['tmp_name'], $uploadDir . $filename2)) {
-                $imagePath2 = $uploadDir . $filename2;
-            }
-        }
-
-        // Troisième exemplaire / vue
-        if (isset($_FILES['image_file3']) && $_FILES['image_file3']['error'] === UPLOAD_ERR_OK) {
-            $filename3 = time() . '_3_' . basename($_FILES['image_file3']['name']);
-            if (move_uploaded_file($_FILES['image_file3']['tmp_name'], $uploadDir . $filename3)) {
-                $imagePath3 = $uploadDir . $filename3;
-            }
+        if (empty($uploadedImages)) {
+            $uploadedImages[] = "assets/images/logo.png";
         }
 
         $new_item = [
-            "id" => time(),
-            "title" => htmlspecialchars($_POST['title']),
-            "price" => floatval($_POST['price']),
+            "id"          => time(),
+            "title"       => htmlspecialchars($_POST['title']),
+            "price"       => floatval($_POST['price']),
             "description" => htmlspecialchars($_POST['description']),
-            "image" => $imagePath1,
-            "image2" => $imagePath2 ?: $imagePath1,
-            "image3" => $imagePath3 ?: $imagePath1
+            "images"      => $uploadedImages,
+            "image"       => $uploadedImages[0] // Compatibilité
         ];
         $data['creations'][] = $new_item;
         save_store_data($data);
     } 
 
-    // 2. AJOUT D'UNE VIDÉO
+    // 2. AJOUT DE PLUSIEURS VIDÉOS
     elseif (isset($_POST['add_video'])) {
-        $videoPath = "";
-
-        if (isset($_FILES['video_file']) && $_FILES['video_file']['error'] === UPLOAD_ERR_OK) {
-            $uploadDir = 'assets/videos/';
-            if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0777, true);
-            }
-
-            $filename = time() . '_' . basename($_FILES['video_file']['name']);
-            if (move_uploaded_file($_FILES['video_file']['tmp_name'], $uploadDir . $filename)) {
-                $videoPath = $uploadDir . $filename;
-            }
+        $uploadDir = 'assets/videos/';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
         }
 
-        if (!empty($videoPath)) {
-            $new_video = [
-                "id" => time(),
-                "title" => htmlspecialchars($_POST['video_title']),
-                "url" => $videoPath
-            ];
-            $data['videos'][] = $new_video;
+        if (isset($_FILES['video_files'])) {
+            $fileCount = count($_FILES['video_files']['name']);
+            for ($i = 0; $i < $fileCount; $i++) {
+                if ($_FILES['video_files']['error'][$i] === UPLOAD_ERR_OK) {
+                    $filename = time() . '_' . $i . '_' . basename($_FILES['video_files']['name'][$i]);
+                    if (move_uploaded_file($_FILES['video_files']['tmp_name'][$i], $uploadDir . $filename)) {
+                        $videoTitle = htmlspecialchars($_POST['video_title']);
+                        if ($fileCount > 1) {
+                            $videoTitle .= ' (' . ($i + 1) . ')';
+                        }
+                        $data['videos'][] = [
+                            "id"    => time() + $i,
+                            "title" => $videoTitle,
+                            "url"   => $uploadDir . $filename
+                        ];
+                    }
+                }
+            }
             save_store_data($data);
         }
     } 
@@ -108,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <h2 class="section-title">Tableau de bord Administration</h2>
 
     <div class="grid-container">
-        <!-- FORMULAIRE PRODUIT AVEC SÉLECTION MULTIPLE D'IMAGES -->
+        <!-- FORMULAIRE PRODUIT (SÉLECTION MULTIPLE D'IMAGES) -->
         <div class="card-body" style="background:#f8f8f8; padding: 1.5rem; border-radius: 8px;">
             <h3>Ajouter un Produit</h3>
             <form action="dashboard.php" method="POST" enctype="multipart/form-data">
@@ -118,18 +109,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
 
                 <div class="form-group">
-                    <label>Image principale *</label>
-                    <input type="file" name="image_file" accept="image/*" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Deuxième image (Exemplaire 2)</label>
-                    <input type="file" name="image_file2" accept="image/*">
-                </div>
-
-                <div class="form-group">
-                    <label>Troisième image (Exemplaire 3)</label>
-                    <input type="file" name="image_file3" accept="image/*">
+                    <label>Images du produit (Sélectionnez une ou plusieurs images)</label>
+                    <input type="file" name="images_files[]" accept="image/*" multiple required>
+                    <small style="color:#666;">Vous pouvez sélectionner plusieurs images d'un coup (maintenez CTRL ou Maj).</small>
                 </div>
 
                 <div class="form-group">
@@ -146,19 +128,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
         </div>
 
-        <!-- FORMULAIRE VIDÉO -->
+        <!-- FORMULAIRE VIDÉOS MULTIPLES -->
         <div class="card-body" style="background:#f8f8f8; padding: 1.5rem; border-radius: 8px;">
-            <h3>Ajouter une Vidéo</h3>
+            <h3>Ajouter une ou plusieurs Vidéos</h3>
             <form action="dashboard.php" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
-                    <label>Titre de la vidéo</label>
+                    <label>Titre / Thème des vidéos</label>
                     <input type="text" name="video_title" required placeholder="Ex: Tutoriel Tricot">
                 </div>
                 <div class="form-group">
-                    <label>Choisir une vidéo depuis votre appareil</label>
-                    <input type="file" name="video_file" accept="video/mp4,video/webm,video/ogg" required>
+                    <label>Choisir les vidéos (Sélection multiple possible)</label>
+                    <input type="file" name="video_files[]" accept="video/mp4,video/webm,video/ogg" multiple required>
                 </div>
-                <button type="submit" name="add_video" class="btn-gold" style="border:none; cursor:pointer; width: 100%;">Ajouter la vidéo</button>
+                <button type="submit" name="add_video" class="btn-gold" style="border:none; cursor:pointer; width: 100%;">Ajouter la/les vidéo(s)</button>
             </form>
         </div>
     </div>
@@ -178,14 +160,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php foreach ($data['creations'] as $item): ?>
                 <tr>
                     <td>
-                        <div style="display: flex; gap: 4px;">
-                            <img src="<?php echo htmlspecialchars($item['image']); ?>" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;">
-                            <?php if (!empty($item['image2'])): ?>
-                                <img src="<?php echo htmlspecialchars($item['image2']); ?>" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;">
-                            <?php endif; ?>
-                            <?php if (!empty($item['image3'])): ?>
-                                <img src="<?php echo htmlspecialchars($item['image3']); ?>" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;">
-                            <?php endif; ?>
+                        <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+                            <?php foreach ($item['images'] as $img): ?>
+                                <img src="<?php echo htmlspecialchars($img); ?>" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;">
+                            <?php endforeach; ?>
                         </div>
                     </td>
                     <td><?php echo htmlspecialchars($item['title']); ?></td>
@@ -226,7 +204,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endforeach; ?>
         </tbody>
     </table>
-<!-- SECTION MESSAGES CLIENTS -->
+
+    <!-- SECTION MESSAGES CLIENTS -->
     <h3 style="margin-top: 3rem;">📬 Messages Reçus des Clients</h3>
     <table class="cart-table">
         <thead>

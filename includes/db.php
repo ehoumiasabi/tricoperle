@@ -10,7 +10,8 @@ function get_store_data() {
 
     $default_data = [
         "creations" => [],
-        "videos" => []
+        "videos"    => [],
+        "messages"  => []
     ];
 
     if (!file_exists($json_path)) {
@@ -31,6 +32,23 @@ function get_store_data() {
 
     if (!isset($decoded['videos']) || !is_array($decoded['videos'])) {
         $decoded['videos'] = [];
+    }
+
+    if (!isset($decoded['messages']) || !is_array($decoded['messages'])) {
+        $decoded['messages'] = [];
+    }
+
+    // Normalisation des images sous forme de tableau "images"
+    foreach ($decoded['creations'] as &$item) {
+        if (!isset($item['images']) || !is_array($item['images'])) {
+            $item['images'] = [];
+            if (!empty($item['image']))  $item['images'][] = $item['image'];
+            if (!empty($item['image2'])) $item['images'][] = $item['image2'];
+            if (!empty($item['image3'])) $item['images'][] = $item['image3'];
+        }
+        if (empty($item['images'])) {
+            $item['images'] = ['assets/images/logo.png'];
+        }
     }
 
     return $decoded;
