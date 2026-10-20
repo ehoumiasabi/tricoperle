@@ -39,8 +39,8 @@ include 'includes/header.php';
 $hero_bg_image = "assets/images/hero-bg.jpg";
 ?>
 
-<!-- STYLE SPÉCIFIQUE POUR HERO ET MODALE -->
 <style>
+/* STYLE BASE (DESKTOP) */
 .hero {
     position: relative;
     width: 100%;
@@ -52,8 +52,9 @@ $hero_bg_image = "assets/images/hero-bg.jpg";
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 3rem 1rem;
+    padding: 3rem 1.5rem;
     color: #ffffff;
+    box-sizing: border-box;
 }
 
 .hero-overlay {
@@ -70,6 +71,7 @@ $hero_bg_image = "assets/images/hero-bg.jpg";
     position: relative;
     z-index: 2;
     max-width: 800px;
+    width: 100%;
 }
 
 .hero-badge {
@@ -84,9 +86,10 @@ $hero_bg_image = "assets/images/hero-bg.jpg";
 }
 
 .hero-content h1 {
-    font-size: 3rem;
+    font-size: 2.8rem;
     margin-bottom: 1rem;
     font-weight: bold;
+    line-height: 1.2;
     letter-spacing: 1px;
 }
 
@@ -94,12 +97,14 @@ $hero_bg_image = "assets/images/hero-bg.jpg";
     font-size: 1.1rem;
     margin-bottom: 2rem;
     color: #f1f1f1;
+    line-height: 1.5;
 }
 
 .hero-buttons {
     display: flex;
     gap: 1rem;
     justify-content: center;
+    align-items: center;
     flex-wrap: wrap;
 }
 
@@ -107,10 +112,11 @@ $hero_bg_image = "assets/images/hero-bg.jpg";
     background: #d4af37;
     color: white;
     padding: 0.8rem 1.8rem;
-    border-radius: 4px;
+    border-radius: 6px;
     text-decoration: none;
     font-weight: bold;
     transition: background 0.3s;
+    display: inline-block;
 }
 
 .btn-hero-primary:hover {
@@ -122,10 +128,11 @@ $hero_bg_image = "assets/images/hero-bg.jpg";
     color: white;
     border: 2px solid white;
     padding: 0.8rem 1.8rem;
-    border-radius: 4px;
+    border-radius: 6px;
     text-decoration: none;
     font-weight: bold;
     transition: background 0.3s, color 0.3s;
+    display: inline-block;
 }
 
 .btn-hero-secondary:hover {
@@ -133,74 +140,41 @@ $hero_bg_image = "assets/images/hero-bg.jpg";
     color: #222;
 }
 
-/* Empêcher la coupe des images dans les cartes */
-.card-img-wrapper {
-    width: 100%;
-    height: 250px;
-    background: #f9f9f9;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
+/* 📱 AJUSTEMENT RESPONSIVE SPÉCIFIQUE POUR MOBILE & ANDROID */
+@media (max-width: 768px) {
+    .hero {
+        padding: 2.5rem 1rem;
+        min-height: auto; /* Laisse le contenu respirer sans couper */
+    }
 
-.card-img-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
+    .hero-badge {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.8rem;
+        margin-bottom: 0.8rem;
+    }
 
-/* Style de la Fenêtre Modale */
-.modal-backdrop {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.8);
-    z-index: 9999;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-}
+    .hero-content h1 {
+        font-size: 1.8rem; /* Titre plus adapté à l'écran mobile */
+        margin-bottom: 0.8rem;
+    }
 
-.modal-box {
-    background: white;
-    width: 100%;
-    max-width: 600px;
-    border-radius: 8px;
-    padding: 2rem;
-    position: relative;
-    max-height: 90vh;
-    overflow-y: auto;
-}
+    .hero-content p {
+        font-size: 0.95rem;
+        margin-bottom: 1.5rem;
+    }
 
-.modal-close {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 1.8rem;
-    cursor: pointer;
-    color: #333;
-}
+    .hero-buttons {
+        flex-direction: column; /* Aligne les 2 boutons l'un sous l'autre sur mobile */
+        width: 100%;
+        gap: 0.8rem;
+    }
 
-.modal-main-img-box {
-    width: 100%;
-    height: 350px;
-    background: #f0f0f0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
-    overflow: hidden;
-    margin-bottom: 1rem;
-}
-
-.modal-main-img-box img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
+    .btn-hero-primary,
+    .btn-hero-secondary {
+        width: 100%; /* Boutons pleine largeur sur mobile */
+        box-sizing: border-box;
+        text-align: center;
+    }
 }
 </style>
 
